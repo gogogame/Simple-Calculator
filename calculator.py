@@ -49,15 +49,15 @@ def is_operator(var): # check if char is operator
 def cal(num1,num2,operator):
   r = 0 # Store Result of calculation
   if operator == "+":
-    r += int(num1) + int(num2)
+    r += float(num1) + float(num2)
   elif operator == "-":
-    r += int(num1) - int(num2)
+    r += float(num1) - float(num2)
   elif operator == "*":
-    r += int(num1) * int(num2)
+    r += float(num1) * float(num2)
   elif operator == "/":
-    r += int(num1) / int(num2)
+    r += float(num1) / float(num2)
   elif operator == "^":
-    r += int(num1) ** int(num2)
+    r += float(num1) ** float(num2)
   return(r)
 
 
@@ -67,27 +67,39 @@ def evaluate(expression, temp = 0): # find operand and do it before and after it
     num1 = []
     num2 = []
     toggle = 'left'
-    for item in (expression) :
+    while(expression):
         item = expression.pop(0)
-        if item == int(temp):
+        if str(item) == str(temp):
             make_true = True
+            if expression == []:
+                print('end')
+                return item
         else:
             make_true = False
-        print(item)
+
+
         if is_digit(item) or make_true:
             if toggle == 'left':
                 num1.append(item)
-                print(num1)
+                #print('TOG',toggle)
+                #print('N1',num1)
             elif toggle == 'right':
                 num2.append(item)
-                print(num2)
+                #print('TOG',toggle)
+                #print('N2',num2)
+                if expression == []:
+                    toggle = 'left'
+                    temp = cal(''.join(num1) ,''.join(num2) ,operand)
+                    num1 = []
+                    num2 = []
+                    expression.insert(0, str(temp))
 
         elif is_operator(item):
             if toggle == 'left':
                 toggle = 'right'
                 operand = item
             elif toggle == 'right':
-                print('doit!')
+                #print('doit!')
                 expression.insert(0, item)
                 toggle = 'left'
                 try :
@@ -95,13 +107,10 @@ def evaluate(expression, temp = 0): # find operand and do it before and after it
                     num1 = []
                     num2 = []
                     expression.insert(0, str(temp))
-                    print(expression)
-                    evaluate(expression)
                 except Exception as error:
                     print(error)
-        #print(item)
-        #print(expression)
 
+    return expression
 
 
 '''
